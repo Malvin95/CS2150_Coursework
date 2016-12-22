@@ -4,8 +4,23 @@
  * Scene Graph:
  *  Scene origin
  *  |
- *
- *  TODO: Provide a scene graph for your submission
+ *	+--[S(25,1,40) T(0,-1,-10)] Ground Plane
+ *	|
+ *	+--[S(25,1,10) Rx(90) T(0,4,-30)] Back Plane
+ *	|
+ *	+--[S(25,1,10) Rx(90) Ry(180) T(0,4,10)] Back AlleyWay Plane
+ *	|
+ *	+--[S(40,1,10) Rx(90) Ry(90) T(-12.5,4,-10)] LeftWall Plane
+ *	|
+ *	+--[S(40,1,10) Rx(270) Ry(90) T(12.5,4,-10)] RightWall Plane
+ *	|
+ *	+--[S(5,6,5) Ry(180) T(-12.5,4,-10)] Door
+ *	|
+ *	+--[Rx(10) Ry(180) T(0,6,10)] Camera 1
+ *	|
+ *	+--[Rx(10) Ry(270) T(12.5,6,-4)] Camera 2
+ *	|
+ *	+--[Rx(10) Ry(270) T(12.5,6,-22)] Camera 3
  */
 package coursework.hardingm;
 
@@ -18,7 +33,7 @@ import GraphicsLab.*;
 
 /**
  * TODO: Briefly describe your submission here
- *
+ *	Description:
  * <p>Controls:
  * <ul>
  * <li>Press the escape key to exit the application.
@@ -53,6 +68,8 @@ public class CS2150Coursework extends GraphicsLab
     float camera1X = 0.0f;
     float camera1Y = 6.0f;
     float camera1Z = 10.0f;
+    float camera1YR = 180.f;
+    float camera1XR = 10.0f;
     
     float camera1XView = 0.0f;
     float camera1YView = 0.0f;
@@ -65,6 +82,8 @@ public class CS2150Coursework extends GraphicsLab
     float camera2X = 12.5f;
     float camera2Y = 6.0f;
     float camera2Z = -4.0f;
+    float camera2YR = 270.f;
+    float camera2ZR = 0.0f;
     
     float camera2XView = 0.0f;
     float camera2YView = 0.0f;
@@ -77,6 +96,7 @@ public class CS2150Coursework extends GraphicsLab
     float camera3X = 12.5f;
     float camera3Y = 6.0f;
     float camera3Z = -22.0f;
+    float camera3YRotation = 270.f;
     
     float camera3XView = 0.0f;
     float camera3YView = 0.0f;
@@ -88,7 +108,7 @@ public class CS2150Coursework extends GraphicsLab
     
     boolean camera1Active = false; 
     boolean camera2Active = false;
-    boolean camera3Active = false; 
+    boolean camera3Active = false;
     
     private Texture groundTextures;
     private Texture backdropTextures;
@@ -195,18 +215,22 @@ public class CS2150Coursework extends GraphicsLab
     	if((camera1Active == true) && Keyboard.isKeyDown(Keyboard.KEY_UP))
         {   
     		cCamera1YView += 2.0f * getAnimationScale();
+    		camera1YR += 2.0f * getAnimationScale();
         }
         else if((camera1Active == true) && Keyboard.isKeyDown(Keyboard.KEY_DOWN))
         {
         	cCamera1YView -= 2.0f * getAnimationScale();
+        	camera1YR -= 2.0f * getAnimationScale();
         }
         else if((camera1Active == true) && Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
         {
         	cCamera1XView += 2.0f * getAnimationScale();
+        	//camera1XRotation += 2.0f * getAnimationScale();
         }
         else if((camera1Active == true) && Keyboard.isKeyDown(Keyboard.KEY_LEFT))
         {
         	cCamera1XView -= 2.0f * getAnimationScale();
+        	//camera1XRotation -= 2.0f * getAnimationScale();
         }
     	
     	//Camera 2 Movement
@@ -251,30 +275,19 @@ public class CS2150Coursework extends GraphicsLab
         //TODO: Update your scene variables here - remember to use the current animation scale value
         //        (obtained via a call to getAnimationScale()) in your modifications so that your animations
         //        can be made faster or slower depending on the machine you are working on
-    	/*
-    	if(camera1Active)
+        
+    	if(camera1Active == false)
     	{
-    		GLU.gluLookAt(camera1X, camera1Y, camera1Z,   // viewer location        
-    	  		      cCamera1XView, cCamera1YView, cCamera1ZView,    // view point loc.
-    	  		      0.0f, 1.0f, 0.0f);
+    		
     	}
-    	else if(camera2Active)
+    	else if(camera2Active == false)
     	{
-    		GLU.gluLookAt(camera2X, camera2Y, camera2Z,   // viewer location        
-    	  		      cCamera2XView, cCamera2YView, cCamera2ZView,    // view point loc.
-    	  		      0.0f, 1.0f, 0.0f);
+
     	}
-    	else if(camera3Active)
+    	else if(camera3Active == false)
     	{
-    		GLU.gluLookAt(camera3X, camera3Y, camera3Z,   // viewer location        
-    	  		      cCamera3XView, cCamera3YView, cCamera3ZView,    // view point loc.
-    	  		      0.0f, 1.0f, 0.0f);
+
     	}
-    	else
-    	{
-    		setSceneCamera();
-    	}
-    	*/
     } 
     
     protected void renderScene()
@@ -484,8 +497,8 @@ public class CS2150Coursework extends GraphicsLab
             
             // position, scale and draw the ground plane using its display list
             GL11.glTranslatef(0.0f, -1.0f, 10.0f);
+            GL11.glRotatef(180.0f, 0.0f, 1.0f, 0.0f);
             GL11.glScaled( 5.0f, 6.0f, 5.0f);
-            GL11.glRotatef(180.0f, 0.0f, 180.0f, 0.0f);
             GL11.glCallList(doorList);
 
             // disable textures and reset any local lighting changes
@@ -510,18 +523,10 @@ public class CS2150Coursework extends GraphicsLab
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE, FloatBuffer.wrap(Diffuse));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT, FloatBuffer.wrap(Diffuse));
             
-            // change the geometry colour to white so that the texture
-            // is bright and details can be seen clearly
-            Colour.WHITE.submit();
-            // enable texturing and bind an appropriate texture
-            //GL11.glEnable(GL11.GL_TEXTURE_2D);
-            //GL11.glBindTexture(GL11.GL_TEXTURE_2D, doorTextures.getTextureID());
-            
             // position, scale and draw the ground plane using its display list
             GL11.glTranslatef(camera1X, camera1Y, camera1Z);
-            GL11.glScaled( 1.0f, 1.0f, 1.0f);
-            GL11.glRotatef(180.0f, 0.0f, 180.0f, 0.0f);
-            GL11.glRotatef(10.0f, 1.0f, 0.0f, 0.0f);
+            GL11.glRotatef(camera1YR, 0.0f, 1.f, 0.0f);
+            GL11.glRotatef(camera1XR, 1.0f, 0.0f, 0.0f);
             GL11.glCallList(cameraList);
 
             // disable textures and reset any local lighting changes
@@ -530,7 +535,7 @@ public class CS2150Coursework extends GraphicsLab
         }
         GL11.glPopMatrix();
         
-        //Draw camera 2
+        //Draw Camera 2
         GL11.glPushMatrix();
         {
         	// how shiny are the front faces of the house (specular exponent)
@@ -546,17 +551,9 @@ public class CS2150Coursework extends GraphicsLab
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE, FloatBuffer.wrap(Diffuse));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT, FloatBuffer.wrap(Diffuse));
             
-            // change the geometry colour to white so that the texture
-            // is bright and details can be seen clearly
-            Colour.WHITE.submit();
-            // enable texturing and bind an appropriate texture
-            //GL11.glEnable(GL11.GL_TEXTURE_2D);
-            //GL11.glBindTexture(GL11.GL_TEXTURE_2D, doorTextures.getTextureID());
-            
             // position, scale and draw the ground plane using its display list
             GL11.glTranslatef(camera2X, camera2Y, camera2Z);
-            GL11.glScaled( 1.0f, 1.0f, 1.0f);
-            GL11.glRotatef(270.0f, 0.0f, 1.0f, 0.0f);
+            GL11.glRotatef(camera2YR, 0.0f, 1.0f, 0.0f);
             GL11.glRotatef(10.0f, 1.0f, 0.0f, 0.0f);
             GL11.glCallList(cameraList);
 
@@ -582,17 +579,9 @@ public class CS2150Coursework extends GraphicsLab
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE, FloatBuffer.wrap(Diffuse));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT, FloatBuffer.wrap(Diffuse));
             
-            // change the geometry colour to white so that the texture
-            // is bright and details can be seen clearly
-            Colour.WHITE.submit();
-            // enable texturing and bind an appropriate texture
-            //GL11.glEnable(GL11.GL_TEXTURE_2D);
-            //GL11.glBindTexture(GL11.GL_TEXTURE_2D, doorTextures.getTextureID());
-            
             // position, scale and draw the ground plane using its display list
             GL11.glTranslatef(camera3X, camera3Y, camera3Z);
-            GL11.glScaled( 1.0f, 1.0f, 1.0f);
-            GL11.glRotatef(270.0f, 0.0f, 1.0f, 0.0f);
+            GL11.glRotatef(camera3YRotation, 0.0f, 1.0f, 0.0f);
             GL11.glRotatef(10.0f, 1.0f, 0.0f, 0.0f);
             GL11.glCallList(cameraList);
 

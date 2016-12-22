@@ -50,6 +50,46 @@ public class CS2150Coursework extends GraphicsLab
      */
     private final int cameraList = 4;
     
+    float camera1X = 0.0f;
+    float camera1Y = 6.0f;
+    float camera1Z = 10.0f;
+    
+    float camera1XView = 0.0f;
+    float camera1YView = 0.0f;
+    float camera1ZView = 0.0f;
+    
+    float cCamera1XView;
+    float cCamera1YView;
+    float cCamera1ZView;
+    
+    float camera2X = 12.5f;
+    float camera2Y = 6.0f;
+    float camera2Z = -4.0f;
+    
+    float camera2XView = 0.0f;
+    float camera2YView = 0.0f;
+    float camera2ZView = 0.0f;
+    
+    float cCamera2XView;
+    float cCamera2YView;
+    float cCamera2ZView;
+    
+    float camera3X = 12.5f;
+    float camera3Y = 6.0f;
+    float camera3Z = -22.0f;
+    
+    float camera3XView = 0.0f;
+    float camera3YView = 0.0f;
+    float camera3ZView = 0.0f;
+    
+    float cCamera3XView;
+    float cCamera3YView;
+    float cCamera3ZView;
+    
+    boolean camera1Active = false; 
+    boolean camera2Active = false;
+    boolean camera3Active = false; 
+    
     private Texture groundTextures;
     private Texture backdropTextures;
     private Texture wallTextures;
@@ -125,13 +165,159 @@ public class CS2150Coursework extends GraphicsLab
     protected void checkSceneInput()
     {
     	//TODO: Check for keyboard and mouse input here
+    	int i = 0;
+    	if(Keyboard.isKeyDown(Keyboard.KEY_S))
+        {   
+    		i++;
+    		if(i == 1)
+    		{
+    			camera1Active = true;
+    			/*
+    			if((camera1Active == true) && (Keyboard.isKeyDown(Keyboard.KEY_UP)))
+        		{   
+    				cCamera1YView += 2.0f * getAnimationScale();
+        		}
+        		else if((camera1Active == true) && (Keyboard.isKeyDown(Keyboard.KEY_DOWN)))
+        		{
+        			cCamera1YView -= 2.0f * getAnimationScale();
+        		}
+        		else if((camera1Active == true) && (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)))
+        		{
+        			cCamera1XView += 2.0f * getAnimationScale();
+        		}
+        		else if((camera1Active == true) && (Keyboard.isKeyDown(Keyboard.KEY_LEFT)))
+        		{
+        			cCamera1XView -= 2.0f * getAnimationScale();
+        		}
+        		*/
+    			if((camera1Active == true) && Keyboard.isKeyDown(Keyboard.KEY_S))
+    			{
+    				camera1Active = false;
+    				// = true;
+    				i++;
+    			}
+    		}
+    		else if(i == 2)
+    		{
+    			camera2Active = true;
+    			/*
+				if((camera2Active == true) && (Keyboard.isKeyDown(Keyboard.KEY_UP)))
+        		{   
+    				cCamera2YView += 2.0f * getAnimationScale();
+        		}
+        		else if((camera2Active == true) && (Keyboard.isKeyDown(Keyboard.KEY_DOWN)))
+        		{
+        			cCamera2YView -= 2.0f * getAnimationScale();
+        		}
+        		else if((camera2Active == true) && (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)))
+        		{
+        			cCamera2XView += 2.0f * getAnimationScale();
+        		}
+        		else if((camera2Active == true) && (Keyboard.isKeyDown(Keyboard.KEY_LEFT)))
+        		{
+        			cCamera2XView -= 2.0f * getAnimationScale();
+        		}
+				*/
+    			if((camera2Active == true) && Keyboard.isKeyDown(Keyboard.KEY_S))
+    			{
+    				camera2Active = false;
+    				//camera3Active = true;
+    				i++;
+    			}
+    		}
+    		else if(i == 3)
+    		{
+    			camera3Active = true;
+    			/*
+				if((camera3Active == true) && (Keyboard.isKeyDown(Keyboard.KEY_UP)))
+        		{   
+    				cCamera3YView += 2.0f * getAnimationScale();
+        		}
+        		else if((camera3Active == true) && (Keyboard.isKeyDown(Keyboard.KEY_DOWN)))
+        		{
+        			cCamera3YView -= 2.0f * getAnimationScale();
+        		}
+        		else if((camera3Active == true) && (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)))
+        		{
+        			cCamera3XView += 2.0f * getAnimationScale();
+        		}
+        		else if((camera3Active == true) && (Keyboard.isKeyDown(Keyboard.KEY_LEFT)))
+        		{
+        			cCamera3XView -= 2.0f * getAnimationScale();
+        		}
+        		*/
+    			if((camera3Active == true) && Keyboard.isKeyDown(Keyboard.KEY_S))
+    			{
+    				camera3Active = false;
+    				i++;
+    			}
+    		}
+    		else
+    		{
+    			setSceneCamera();
+    			i = 0;
+    		}
+        }
+        else if(Keyboard.isKeyDown(Keyboard.KEY_SPACE))
+        {   
+        	resetAnimations();
+        }
+        
+    	/*
+    	if(Keyboard.isKeyDown(Keyboard.KEY_UP))
+        {   
+    		cCamera3YView += 2.0f * getAnimationScale();
+        }
+        else if(Keyboard.isKeyDown(Keyboard.KEY_DOWN))
+        {
+        	cCamera3YView -= 2.0f * getAnimationScale();
+        }
+        else if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
+        {
+        	cCamera3XView += 2.0f * getAnimationScale();
+        }
+        else if(Keyboard.isKeyDown(Keyboard.KEY_LEFT))
+        {
+        	cCamera3XView -= 2.0f * getAnimationScale();
+        }
+    	else if(Keyboard.isKeyDown(Keyboard.KEY_SPACE))
+        {   
+        	resetAnimations();
+        }
+        */
     }
+    
     protected void updateScene()
     {
         //TODO: Update your scene variables here - remember to use the current animation scale value
         //        (obtained via a call to getAnimationScale()) in your modifications so that your animations
         //        can be made faster or slower depending on the machine you are working on
+    	/*
+    	if(camera1Active)
+    	{
+    		GLU.gluLookAt(camera1X, camera1Y, camera1Z,   // viewer location        
+    	  		      cCamera1XView, cCamera1YView, cCamera1ZView,    // view point loc.
+    	  		      0.0f, 1.0f, 0.0f);
+    	}
+    	else if(camera2Active)
+    	{
+    		GLU.gluLookAt(camera2X, camera2Y, camera2Z,   // viewer location        
+    	  		      cCamera2XView, cCamera2YView, cCamera2ZView,    // view point loc.
+    	  		      0.0f, 1.0f, 0.0f);
+    	}
+    	else if(camera3Active)
+    	{
+    		GLU.gluLookAt(camera3X, camera3Y, camera3Z,   // viewer location        
+    	  		      cCamera3XView, cCamera3YView, cCamera3ZView,    // view point loc.
+    	  		      0.0f, 1.0f, 0.0f);
+    	}
+    	else
+    	{
+    		setSceneCamera();
+    	}
+    	*/
     } 
+    
     protected void renderScene()
     {
     	//TODO: Render your scene here - remember that a scene graph will help you write this method! 
@@ -152,13 +338,6 @@ public class CS2150Coursework extends GraphicsLab
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_SPECULAR, FloatBuffer.wrap(Specular));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE, FloatBuffer.wrap(Diffuse));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT, FloatBuffer.wrap(Diffuse));
-        	
-            /*
-        	// disable lighting calculations so that they don't affect
-            // the appearance of the texture 
-            GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
-            GL11.glDisable(GL11.GL_LIGHTING);
-            */
             
             // change the geometry colour to white so that the texture
             // is bright and details can be seen clearly
@@ -193,13 +372,6 @@ public class CS2150Coursework extends GraphicsLab
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_SPECULAR, FloatBuffer.wrap(Specular));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE, FloatBuffer.wrap(Diffuse));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT, FloatBuffer.wrap(Diffuse));
-        	
-            /*
-        	// disable lighting calculations so that they don't affect
-            // the appearance of the texture 
-            GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
-            GL11.glDisable(GL11.GL_LIGHTING);
-            */
             
             // change the geometry colour to white so that the texture
             // is bright and details can be seen clearly
@@ -235,13 +407,6 @@ public class CS2150Coursework extends GraphicsLab
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_SPECULAR, FloatBuffer.wrap(Specular));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE, FloatBuffer.wrap(Diffuse));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT, FloatBuffer.wrap(Diffuse));
-        	
-            /*
-        	// disable lighting calculations so that they don't affect
-            // the appearance of the texture 
-            GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
-            GL11.glDisable(GL11.GL_LIGHTING);
-            */
             
             // change the geometry colour to white so that the texture
             // is bright and details can be seen clearly
@@ -278,13 +443,6 @@ public class CS2150Coursework extends GraphicsLab
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_SPECULAR, FloatBuffer.wrap(Specular));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE, FloatBuffer.wrap(Diffuse));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT, FloatBuffer.wrap(Diffuse));
-        	
-            /*
-        	// disable lighting calculations so that they don't affect
-            // the appearance of the texture 
-            GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
-            GL11.glDisable(GL11.GL_LIGHTING);
-            */
             
             // change the geometry colour to white so that the texture
             // is bright and details can be seen clearly
@@ -322,13 +480,6 @@ public class CS2150Coursework extends GraphicsLab
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE, FloatBuffer.wrap(Diffuse));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT, FloatBuffer.wrap(Diffuse));
         	
-            /*
-        	// disable lighting calculations so that they don't affect
-            // the appearance of the texture 
-            GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
-            GL11.glDisable(GL11.GL_LIGHTING);
-            */
-        	
             // change the geometry colour to white so that the texture
             // is bright and details can be seen clearly
             Colour.WHITE.submit();
@@ -364,13 +515,6 @@ public class CS2150Coursework extends GraphicsLab
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_SPECULAR, FloatBuffer.wrap(Specular));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE, FloatBuffer.wrap(Diffuse));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT, FloatBuffer.wrap(Diffuse));
-        	
-            /*
-        	// disable lighting calculations so that they don't affect
-            // the appearance of the texture 
-            GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
-            GL11.glDisable(GL11.GL_LIGHTING);
-            */
             
             // change the geometry colour to white so that the texture
             // is bright and details can be seen clearly
@@ -406,13 +550,6 @@ public class CS2150Coursework extends GraphicsLab
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_SPECULAR, FloatBuffer.wrap(Specular));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE, FloatBuffer.wrap(Diffuse));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT, FloatBuffer.wrap(Diffuse));
-        	
-            /*
-        	// disable lighting calculations so that they don't affect
-            // the appearance of the texture 
-            GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
-            GL11.glDisable(GL11.GL_LIGHTING);
-            */
             
             // change the geometry colour to white so that the texture
             // is bright and details can be seen clearly
@@ -422,7 +559,7 @@ public class CS2150Coursework extends GraphicsLab
             //GL11.glBindTexture(GL11.GL_TEXTURE_2D, doorTextures.getTextureID());
             
             // position, scale and draw the ground plane using its display list
-            GL11.glTranslatef(0.0f, 6.0f, 10.0f);
+            GL11.glTranslatef(camera1X, camera1Y, camera1Z);
             GL11.glScaled( 1.0f, 1.0f, 1.0f);
             GL11.glRotatef(180.0f, 0.0f, 180.0f, 0.0f);
             GL11.glRotatef(10.0f, 1.0f, 0.0f, 0.0f);
@@ -449,13 +586,6 @@ public class CS2150Coursework extends GraphicsLab
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_SPECULAR, FloatBuffer.wrap(Specular));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE, FloatBuffer.wrap(Diffuse));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT, FloatBuffer.wrap(Diffuse));
-        	
-            /*
-        	// disable lighting calculations so that they don't affect
-            // the appearance of the texture 
-            GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
-            GL11.glDisable(GL11.GL_LIGHTING);
-            */
             
             // change the geometry colour to white so that the texture
             // is bright and details can be seen clearly
@@ -465,7 +595,7 @@ public class CS2150Coursework extends GraphicsLab
             //GL11.glBindTexture(GL11.GL_TEXTURE_2D, doorTextures.getTextureID());
             
             // position, scale and draw the ground plane using its display list
-            GL11.glTranslatef(12.5f, 6.0f, -4.0f);
+            GL11.glTranslatef(camera2X, camera2Y, camera2Z);
             GL11.glScaled( 1.0f, 1.0f, 1.0f);
             GL11.glRotatef(270.0f, 0.0f, 1.0f, 0.0f);
             GL11.glRotatef(10.0f, 1.0f, 0.0f, 0.0f);
@@ -492,13 +622,6 @@ public class CS2150Coursework extends GraphicsLab
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_SPECULAR, FloatBuffer.wrap(Specular));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE, FloatBuffer.wrap(Diffuse));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT, FloatBuffer.wrap(Diffuse));
-        	
-            /*
-        	// disable lighting calculations so that they don't affect
-            // the appearance of the texture 
-            GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
-            GL11.glDisable(GL11.GL_LIGHTING);
-            */
             
             // change the geometry colour to white so that the texture
             // is bright and details can be seen clearly
@@ -508,7 +631,7 @@ public class CS2150Coursework extends GraphicsLab
             //GL11.glBindTexture(GL11.GL_TEXTURE_2D, doorTextures.getTextureID());
             
             // position, scale and draw the ground plane using its display list
-            GL11.glTranslatef(12.5f, 6.0f, -22.0f);
+            GL11.glTranslatef(camera3X, camera3Y, camera3Z);
             GL11.glScaled( 1.0f, 1.0f, 1.0f);
             GL11.glRotatef(270.0f, 0.0f, 1.0f, 0.0f);
             GL11.glRotatef(10.0f, 1.0f, 0.0f, 0.0f);
@@ -527,16 +650,59 @@ public class CS2150Coursework extends GraphicsLab
         // and default camera settings ready for some custom camera positioning below...  
         super.setSceneCamera();
         
+        if(camera1Active == true)
+    	{
+    		GLU.gluLookAt(camera1X, camera1Y, camera1Z,   // viewer location        
+    	  		      cCamera1XView, cCamera1YView, cCamera1ZView,    // view point loc.
+    	  		      0.0f, 1.0f, 0.0f);
+    	}
+    	else if(camera2Active == true)
+    	{
+    		GLU.gluLookAt(camera2X, camera2Y, camera2Z,   // viewer location        
+    	  		      cCamera2XView, cCamera2YView, cCamera2ZView,    // view point loc.
+    	  		      0.0f, 1.0f, 0.0f);
+    	}
+    	else if(camera3Active == true)
+    	{
+    		GLU.gluLookAt(camera3X, camera3Y, camera3Z,   // viewer location        
+    	  		      cCamera3XView, cCamera3YView, cCamera3ZView,    // view point loc.
+    	  		      0.0f, 1.0f, 0.0f);
+    	}
+    	else
+    	{
         GLU.gluLookAt(0.0f, 20.0f, -60.0f,   // viewer location        
   		      0.0f, 0.0f, 0.0f,    // view point loc.
   		      0.0f, 1.0f, 0.0f);   // view-up vector
+        }
+        /*
+        GLU.gluLookAt(camera1X,camera1Y,camera1Z,   // viewer location        
+        		cCamera1XView, cCamera1YView, cCamera1ZView,    // view point loc.
+    		      0.0f, 1.0f, 0.0f);   // view-up vector
+    	*/
         //TODO: If it is appropriate for your scene, modify the camera's position and orientation here
         //        using a call to GL11.gluLookAt(...)
     }
-
+    
     protected void cleanupScene()
     {
     	//TODO: Clean up your resources here
+    }
+    
+    private void resetAnimations()
+    {
+        // reset all attributes that are modified by user controls or animations
+        cCamera1XView = camera1XView;
+        cCamera1YView = camera1YView;
+        cCamera1ZView = camera1ZView;
+        
+        cCamera2XView = camera2XView;
+        cCamera2YView = camera2YView;
+        cCamera2ZView = camera2ZView;
+        
+        cCamera3XView = camera3XView;
+        cCamera3YView = camera3YView;
+        cCamera3ZView = camera3ZView;
+        
     }
     
     private void drawUnitPlane()

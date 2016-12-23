@@ -46,8 +46,6 @@ import GraphicsLab.*;
  */
 public class CS2150Coursework extends GraphicsLab
 {
-	
-    //TODO: Feel free to change the window title and default animation scale here
 	/** 
 	 * display list id for the unit AlleyWay 
 	 */
@@ -65,47 +63,67 @@ public class CS2150Coursework extends GraphicsLab
      */
     private final int cameraList = 4;
     
-    float camera1X = 0.0f;
-    float camera1Y = 6.0f;
-    float camera1Z = 10.0f;
-    float camera1YR = 180.f;
-    float camera1XR = 10.0f;
+    float camera1X = 0.0f; //Camera 1 X-Coordinate
+    float camera1Y = 6.0f; //Camera 1 Y-Coordinate
+    float camera1Z = 10.0f; //Camera 1 Z-Coordinate
+    float camera1YR = 180.f; //Camera 1 Y-Rotation Value
+    float camera1XR = 10.0f; //Camera 1 X-Rotation Value
     
-    float camera1XView = 0.0f;
+    //camera 1 View direction coordinates
+    float camera1XView = 0.0f; 
     float camera1YView = 0.0f;
     float camera1ZView = 0.0f;
     
+    /*
+     * The View direction Coordinates of camera 1 used at 
+     * any given point in time once the scene is running
+     */
     float cCamera1XView;
     float cCamera1YView;
     float cCamera1ZView;
     
-    float camera2X = 12.5f;
-    float camera2Y = 6.0f;
-    float camera2Z = -4.0f;
-    float camera2YR = 270.f;
-    float camera2ZR = 0.0f;
+    float camera2X = 12.5f; //Camera 2 X-Coordinate
+    float camera2Y = 6.0f; //Camera 2 Y-Coordinate
+    float camera2Z = -4.0f; //Camera 2 Z-Coordinate
+    float camera2YR = 270.f; //Camera 2 Y-Rotation Value
+    float camera2ZR = 0.0f; //Camera 2 Z-Rotation Value
     
+    //camera 2 View direction coordinates
     float camera2XView = 0.0f;
     float camera2YView = 0.0f;
     float camera2ZView = 0.0f;
     
+    /*
+     * The View direction Coordinates of camera 2 used at 
+     * any given point in time once the scene is running
+     */
     float cCamera2XView;
     float cCamera2YView;
     float cCamera2ZView;
     
-    float camera3X = 12.5f;
-    float camera3Y = 6.0f;
-    float camera3Z = -22.0f;
-    float camera3YRotation = 270.f;
+    float camera3X = 12.5f; //Camera 3 X-Coordinate
+    float camera3Y = 6.0f; //Camera 3 Y-Coordinate
+    float camera3Z = -22.0f; //Camera 3 Z-Coordinate
+    float camera3YR = 270.f; //Camera 3 X-Rotation Value
+    float camera3ZR; //Camera 3 Z-Rotation Value
     
+    //camera 1 View direction coordinates
     float camera3XView = 0.0f;
     float camera3YView = 0.0f;
     float camera3ZView = 0.0f;
     
+    /*
+     * The View direction Coordinates of camera 3 used at 
+     * any given point in time once the scene is running
+     */
     float cCamera3XView;
     float cCamera3YView;
     float cCamera3ZView;
     
+    /*
+     * The booleans that set whether a camera is 
+     * active and being used at any given point in time.
+     */
     boolean camera1Active = false; 
     boolean camera2Active = false;
     boolean camera3Active = false;
@@ -123,7 +141,6 @@ public class CS2150Coursework extends GraphicsLab
 
     protected void initScene() throws Exception
     { 
-    	//TODO: Initialise your resources here - might well call other methods you write.
     	
     	groundTextures = loadTexture("Lab5/textures/paving4.bmp");
         backdropTextures = loadTexture("Lab5/textures/cityBackdrop.bmp");
@@ -133,34 +150,21 @@ public class CS2150Coursework extends GraphicsLab
     	
     	// global ambient light level
         float globalAmbient[] = {1.8f, 1.8f, 1.8f, 1.0f};
-        // set the global ambient lighting
-        GL11.glLightModel(GL11.GL_LIGHT_MODEL_AMBIENT, FloatBuffer.wrap(globalAmbient));
-
         
-        // the first light for the scene is white...
+        GL11.glLightModel(GL11.GL_LIGHT_MODEL_AMBIENT, FloatBuffer.wrap(globalAmbient));
         float diffuse0[]  = { 0.6f,  0.6f, 0.4f, 1.0f};
-        // ...with a dim ambient contribution...
         float ambient0[]  = { 0.5f,  0.5f, 0.5f, 1.0f};
-        // ...and is positioned above and behind the viewpoint
-        float position0[] = { -5.0f, 5.0f, 2.5f, 1.0f}; 
+        // The Scene Light is positioned above and behind the viewpoint
+        float position0[] = { -5.0f, 5.0f, 2.5f, 1.0f};
 
-        //Lighting properties
         GL11.glLight(GL11.GL_LIGHT0, GL11.GL_AMBIENT, FloatBuffer.wrap(ambient0));
         GL11.glLight(GL11.GL_LIGHT0, GL11.GL_DIFFUSE, FloatBuffer.wrap(diffuse0));
   		GL11.glLight(GL11.GL_LIGHT0, GL11.GL_SPECULAR, FloatBuffer.wrap(diffuse0));
         GL11.glLight(GL11.GL_LIGHT0, GL11.GL_POSITION, FloatBuffer.wrap(position0));
         GL11.glEnable(GL11.GL_LIGHT0);
         
-        //Lighting calculations
         GL11.glEnable(GL11.GL_LIGHTING);
-        //Ensure that all normals are re-normalised after transformations automatically
         GL11.glEnable(GL11.GL_NORMALIZE);
-        
-        GL11.glNewList(alleyList,GL11.GL_COMPILE);
-        {
-        	drawUnitAlleyWay();
-        }
-        GL11.glEndList();
         
         GL11.glNewList(planeList,GL11.GL_COMPILE);
         {
@@ -184,21 +188,35 @@ public class CS2150Coursework extends GraphicsLab
     
     protected void checkSceneInput()
     {
-    	//TODO: Check for keyboard and mouse input here
     	if(Keyboard.isKeyDown(Keyboard.KEY_1))
         {   
+    		/**
+    		 * If the number 1 is pressed on the keyboard 
+    		 * then camera 1 is set as active, 
+    		 * this then deactivates cameras 2&3.
+    		 */
     		camera2Active = false;
     		camera3Active = false;
     		camera1Active = true;
         }
     	else if (Keyboard.isKeyDown(Keyboard.KEY_2))
     	{
+    		/**
+    		 * If the number 2 is pressed on the keyboard 
+    		 * then camera 2 is set as active, 
+    		 * this then deactivates cameras 1&3.
+    		 */
     		camera1Active = false;
     		camera3Active = false;
     		camera2Active = true;
     	}
     	else if (Keyboard.isKeyDown(Keyboard.KEY_3))
     	{
+    		/**
+    		 * If the number 3 is pressed on the keyboard 
+    		 * then camera 3 is set as active, 
+    		 * this then deactivates cameras 1&2.
+    		 */
     		camera1Active = false;
     		camera2Active = false;
     		camera3Active = true;
@@ -212,6 +230,12 @@ public class CS2150Coursework extends GraphicsLab
         }
     	
     	//Camera 1 movement
+    	/**
+    	 * If Camera 1 is active and either one of the 
+    	 * directional Arrow Keys are pressed then the user 
+    	 * is able to control the viewing direction of the 
+    	 * camera at that point in time. 
+    	 */
     	if((camera1Active == true) && Keyboard.isKeyDown(Keyboard.KEY_UP))
         {   
     		cCamera1YView += 2.0f * getAnimationScale();
@@ -225,15 +249,21 @@ public class CS2150Coursework extends GraphicsLab
         else if((camera1Active == true) && Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
         {
         	cCamera1XView += 2.0f * getAnimationScale();
-        	//camera1XRotation += 2.0f * getAnimationScale();
+        	camera1XR += 2.0f * getAnimationScale();
         }
         else if((camera1Active == true) && Keyboard.isKeyDown(Keyboard.KEY_LEFT))
         {
         	cCamera1XView -= 2.0f * getAnimationScale();
-        	//camera1XRotation -= 2.0f * getAnimationScale();
+        	camera1XR -= 2.0f * getAnimationScale();
         }
     	
     	//Camera 2 Movement
+    	/**
+    	 * If Camera 2 is active and either one of the 
+    	 * directional Arrow Keys are pressed then the user 
+    	 * is able to control the viewing direction of the 
+    	 * camera at that point in time. 
+    	 */
     	if((camera2Active == true) && Keyboard.isKeyDown(Keyboard.KEY_UP))
         {   
     		cCamera2YView += 2.0f * getAnimationScale();
@@ -252,6 +282,12 @@ public class CS2150Coursework extends GraphicsLab
         }
     	
         //Camera 3 Movement
+    	/**
+    	 * If Camera 3 is active and either one of the 
+    	 * directional Arrow Keys are pressed then the user 
+    	 * is able to control the viewing direction of the 
+    	 * camera at that point in time. 
+    	 */
     	if((camera3Active == true) && Keyboard.isKeyDown(Keyboard.KEY_UP))
         {   
     		cCamera3YView += 2.0f * getAnimationScale();
@@ -291,34 +327,23 @@ public class CS2150Coursework extends GraphicsLab
     } 
     
     protected void renderScene()
-    {
-    	//TODO: Render your scene here - remember that a scene graph will help you write this method! 
-    	//      It will probably call a number of other methods you will write.
-    	
+    {	
     	// draw the ground plane
         GL11.glPushMatrix();
         {
-        	// how shiny are the front faces of the house (specular exponent)
             float Shininess  = 2.0f;
-            // specular reflection of the front faces of the house
             float Specular[] = {0.1f, 0.1f, 0.1f, 1.0f};
-            // diffuse reflection of the front faces of the house
             float Diffuse[]  = {0.2f, 0.2f, 0.2f, 1.0f};
             
-            // set the material properties for the house using OpenGL
             GL11.glMaterialf(GL11.GL_FRONT, GL11.GL_SHININESS, Shininess);
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_SPECULAR, FloatBuffer.wrap(Specular));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE, FloatBuffer.wrap(Diffuse));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT, FloatBuffer.wrap(Diffuse));
             
-            // change the geometry colour to white so that the texture
-            // is bright and details can be seen clearly
-            Colour.WHITE.submit();
             // enable texturing and bind an appropriate texture
             GL11.glEnable(GL11.GL_TEXTURE_2D);
             GL11.glBindTexture(GL11.GL_TEXTURE_2D,groundTextures.getTextureID());
             
-            // position, scale and draw the ground plane using its display list
             GL11.glTranslatef(0.0f,-1.0f,-10.0f);
             GL11.glScaled(25.0f, 1.0f, 40.0f);
             GL11.glCallList(planeList);
@@ -332,11 +357,8 @@ public class CS2150Coursework extends GraphicsLab
         // draw the back plane
         GL11.glPushMatrix();
         {
-        	// how shiny are the front faces of the house (specular exponent)
             float Shininess  = 2.0f;
-            // specular reflection of the front faces of the house
             float Specular[] = {0.1f, 0.1f, 0.1f, 1.0f};
-            // diffuse reflection of the front faces of the house
             float Diffuse[]  = {0.2f, 0.2f, 0.2f, 1.0f};
             
             // set the material properties for the house using OpenGL
@@ -344,11 +366,8 @@ public class CS2150Coursework extends GraphicsLab
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_SPECULAR, FloatBuffer.wrap(Specular));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE, FloatBuffer.wrap(Diffuse));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT, FloatBuffer.wrap(Diffuse));
-            
-            // change the geometry colour to white so that the texture
-            // is bright and details can be seen clearly
-            Colour.WHITE.submit();
-            
+
+            // enable texturing and bind an appropriate texture
             GL11.glEnable(GL11.GL_TEXTURE_2D);
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, backdropTextures.getTextureID());
             
@@ -367,27 +386,20 @@ public class CS2150Coursework extends GraphicsLab
      // draw the back AlleyWay plane
         GL11.glPushMatrix();
         {
-        	// how shiny are the front faces of the house (specular exponent)
             float Shininess  = 2.0f;
-            // specular reflection of the front faces of the house
             float Specular[] = {0.1f, 0.1f, 0.1f, 1.0f};
-            // diffuse reflection of the front faces of the house
             float Diffuse[]  = {0.2f, 0.2f, 0.2f, 1.0f};
             
-            // set the material properties for the house using OpenGL
             GL11.glMaterialf(GL11.GL_FRONT, GL11.GL_SHININESS, Shininess);
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_SPECULAR, FloatBuffer.wrap(Specular));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE, FloatBuffer.wrap(Diffuse));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT, FloatBuffer.wrap(Diffuse));
-            
-            // change the geometry colour to white so that the texture
-            // is bright and details can be seen clearly
-            Colour.WHITE.submit();
-            
+
+            // enable texturing and bind an appropriate texture
             GL11.glEnable(GL11.GL_TEXTURE_2D);
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, alleyTextures.getTextureID());
             
-            // position, scale and draw the back plane using its display list
+            // position, scale and draw the back AlleyWay plane using its display list
             GL11.glTranslatef(0.0f,4.0f, 10.0f);
             GL11.glRotatef(180.0f, 0.0f, 1.0f, 0.0f);
             GL11.glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
@@ -403,27 +415,20 @@ public class CS2150Coursework extends GraphicsLab
         //draw the LeftWall plane
         GL11.glPushMatrix();
         {
-        	// how shiny are the front faces of the house (specular exponent)
             float Shininess  = 2.0f;
-            // specular reflection of the front faces of the house
             float Specular[] = {0.1f, 0.1f, 0.1f, 1.0f};
-            // diffuse reflection of the front faces of the house
             float Diffuse[]  = {0.2f, 0.2f, 0.2f, 1.0f};
             
-            // set the material properties for the house using OpenGL
             GL11.glMaterialf(GL11.GL_FRONT, GL11.GL_SHININESS, Shininess);
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_SPECULAR, FloatBuffer.wrap(Specular));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE, FloatBuffer.wrap(Diffuse));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT, FloatBuffer.wrap(Diffuse));
-            
-            // change the geometry colour to white so that the texture
-            // is bright and details can be seen clearly
-            Colour.WHITE.submit();
-            
+
+            // enable texturing and bind an appropriate texture
             GL11.glEnable(GL11.GL_TEXTURE_2D);
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, wallTextures.getTextureID());
             
-            // position, scale and draw the back plane using its display list
+            // position, scale and draw the LeftWall plane using its display list
             GL11.glTranslatef(-12.5f,4.0f, -10.0f);
             GL11.glRotatef(90.0f, 0.0f, 1.0f, 0.0f);
             GL11.glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
@@ -439,27 +444,22 @@ public class CS2150Coursework extends GraphicsLab
         //Draw the RightWall plane
         GL11.glPushMatrix();
         {
-        	// how shiny are the front faces of the house (specular exponent)
             float Shininess  = 2.0f;
-            // specular reflection of the front faces of the house
             float Specular[] = {0.1f, 0.1f, 0.1f, 1.0f};
-            // diffuse reflection of the front faces of the house
             float Diffuse[]  = {0.2f, 0.2f, 0.2f, 1.0f};
             
-            // set the material properties for the house using OpenGL
             GL11.glMaterialf(GL11.GL_FRONT, GL11.GL_SHININESS, Shininess);
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_SPECULAR, FloatBuffer.wrap(Specular));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE, FloatBuffer.wrap(Diffuse));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT, FloatBuffer.wrap(Diffuse));
-        	
-            // change the geometry colour to white so that the texture
-            // is bright and details can be seen clearly
+            
+            // enable texturing and bind an appropriate texture
             Colour.WHITE.submit();
             
             GL11.glEnable(GL11.GL_TEXTURE_2D);
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, wallTextures.getTextureID());
             
-            // position, scale and draw the back plane using its display list
+            // position, scale and draw the RightWall plane using its display list
             GL11.glTranslatef(12.5f, 4.0f, -10.0f);
             GL11.glRotatef(90.0f, 0.0f, 1.0f, 0.0f);
             GL11.glRotatef(270.0f, 1.0f, 0.0f, 0.0f);
@@ -475,27 +475,20 @@ public class CS2150Coursework extends GraphicsLab
         //draw the door
         GL11.glPushMatrix();
         {
-        	// how shiny are the front faces of the house (specular exponent)
             float Shininess  = 2.0f;
-            // specular reflection of the front faces of the house
             float Specular[] = {0.1f, 0.1f, 0.1f, 1.0f};
-            // diffuse reflection of the front faces of the house
             float Diffuse[]  = {0.2f, 0.2f, 0.2f, 1.0f};
             
-            // set the material properties for the house using OpenGL
             GL11.glMaterialf(GL11.GL_FRONT, GL11.GL_SHININESS, Shininess);
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_SPECULAR, FloatBuffer.wrap(Specular));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE, FloatBuffer.wrap(Diffuse));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT, FloatBuffer.wrap(Diffuse));
             
-            // change the geometry colour to white so that the texture
-            // is bright and details can be seen clearly
-            Colour.WHITE.submit();
             // enable texturing and bind an appropriate texture
             GL11.glEnable(GL11.GL_TEXTURE_2D);
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, doorTextures.getTextureID());
             
-            // position, scale and draw the ground plane using its display list
+            // position, scale and draw the Door using its display list
             GL11.glTranslatef(0.0f, -1.0f, 10.0f);
             GL11.glRotatef(180.0f, 0.0f, 1.0f, 0.0f);
             GL11.glScaled( 5.0f, 6.0f, 5.0f);
@@ -510,20 +503,16 @@ public class CS2150Coursework extends GraphicsLab
         //Draw Camera 1
         GL11.glPushMatrix();
         {
-        	// how shiny are the front faces of the house (specular exponent)
             float Shininess  = 2.0f;
-            // specular reflection of the front faces of the house
             float Specular[] = {0.1f, 0.1f, 0.1f, 1.0f};
-            // diffuse reflection of the front faces of the house
             float Diffuse[]  = {0.2f, 0.2f, 0.2f, 1.0f};
             
-            // set the material properties for the house using OpenGL
             GL11.glMaterialf(GL11.GL_FRONT, GL11.GL_SHININESS, Shininess);
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_SPECULAR, FloatBuffer.wrap(Specular));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE, FloatBuffer.wrap(Diffuse));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT, FloatBuffer.wrap(Diffuse));
             
-            // position, scale and draw the ground plane using its display list
+            // position, scale and draw Camera 1 using its display list
             GL11.glTranslatef(camera1X, camera1Y, camera1Z);
             GL11.glRotatef(camera1YR, 0.0f, 1.f, 0.0f);
             GL11.glRotatef(camera1XR, 1.0f, 0.0f, 0.0f);
@@ -538,20 +527,16 @@ public class CS2150Coursework extends GraphicsLab
         //Draw Camera 2
         GL11.glPushMatrix();
         {
-        	// how shiny are the front faces of the house (specular exponent)
             float Shininess  = 2.0f;
-            // specular reflection of the front faces of the house
             float Specular[] = {0.1f, 0.1f, 0.1f, 1.0f};
-            // diffuse reflection of the front faces of the house
             float Diffuse[]  = {0.2f, 0.2f, 0.2f, 1.0f};
             
-            // set the material properties for the house using OpenGL
             GL11.glMaterialf(GL11.GL_FRONT, GL11.GL_SHININESS, Shininess);
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_SPECULAR, FloatBuffer.wrap(Specular));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE, FloatBuffer.wrap(Diffuse));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT, FloatBuffer.wrap(Diffuse));
             
-            // position, scale and draw the ground plane using its display list
+            // position, scale and draw Camera 2 using its display list
             GL11.glTranslatef(camera2X, camera2Y, camera2Z);
             GL11.glRotatef(camera2YR, 0.0f, 1.0f, 0.0f);
             GL11.glRotatef(10.0f, 1.0f, 0.0f, 0.0f);
@@ -566,22 +551,18 @@ public class CS2150Coursework extends GraphicsLab
       //Draw Camera 3
         GL11.glPushMatrix();
         {
-        	// how shiny are the front faces of the house (specular exponent)
             float Shininess  = 2.0f;
-            // specular reflection of the front faces of the house
             float Specular[] = {0.1f, 0.1f, 0.1f, 1.0f};
-            // diffuse reflection of the front faces of the house
             float Diffuse[]  = {0.2f, 0.2f, 0.2f, 1.0f};
             
-            // set the material properties for the house using OpenGL
             GL11.glMaterialf(GL11.GL_FRONT, GL11.GL_SHININESS, Shininess);
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_SPECULAR, FloatBuffer.wrap(Specular));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE, FloatBuffer.wrap(Diffuse));
             GL11.glMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT, FloatBuffer.wrap(Diffuse));
             
-            // position, scale and draw the ground plane using its display list
+            // position, scale and draw Camera 3 using its display list
             GL11.glTranslatef(camera3X, camera3Y, camera3Z);
-            GL11.glRotatef(camera3YRotation, 0.0f, 1.0f, 0.0f);
+            GL11.glRotatef(camera3YR, 0.0f, 1.0f, 0.0f);
             GL11.glRotatef(10.0f, 1.0f, 0.0f, 0.0f);
             GL11.glCallList(cameraList);
 
@@ -598,37 +579,44 @@ public class CS2150Coursework extends GraphicsLab
         // and default camera settings ready for some custom camera positioning below...  
         super.setSceneCamera();
         
+        /**
+         * If camera 1 is Active then the view of the scene 
+         * is changed to the viewpoint from camera 1.
+         * 
+         * If camera 2 is Active then the view of the scene 
+         * is changed to the viewpoint from camera 2.
+         * 
+         * If camera 3 is Active then the view of the scene 
+         * is changed to the viewpoint from camera 3.
+         * 
+         * If none of these camera viewpoints are active 
+         * then the default viewpoint of the scene is above 
+         * the scene.
+         */
         if(camera1Active == true)
     	{
-    		GLU.gluLookAt(camera1X, camera1Y, camera1Z - 1.2f,   // viewer location        
-    	  		      cCamera1XView, cCamera1YView, cCamera1ZView,    // view point loc.
+    		GLU.gluLookAt(camera1X, camera1Y, camera1Z - 1.2f,
+    	  		      cCamera1XView, cCamera1YView, cCamera1ZView,
     	  		      0.0f, 1.0f, 0.0f);
     	}
     	else if(camera2Active == true)
     	{
-    		GLU.gluLookAt(camera2X - 1.2f, camera2Y, camera2Z,   // viewer location        
-    	  		      cCamera2XView, cCamera2YView, cCamera2ZView,    // view point loc.
+    		GLU.gluLookAt(camera2X - 1.2f, camera2Y, camera2Z,
+    	  		      cCamera2XView, cCamera2YView, cCamera2ZView,
     	  		      0.0f, 1.0f, 0.0f);
     	}
     	else if(camera3Active == true)
     	{
-    		GLU.gluLookAt(camera3X - 1.2f, camera3Y, camera3Z,   // viewer location        
-    	  		      cCamera3XView, cCamera3YView, cCamera3ZView,    // view point loc.
+    		GLU.gluLookAt(camera3X - 1.2f, camera3Y, camera3Z,
+    	  		      cCamera3XView, cCamera3YView, cCamera3ZView,
     	  		      0.0f, 1.0f, 0.0f);
     	}
     	else
     	{
-        GLU.gluLookAt(0.0f, 20.0f, -60.0f,   // viewer location        
-  		      0.0f, 0.0f, 0.0f,    // view point loc.
-  		      0.0f, 1.0f, 0.0f);   // view-up vector
+        GLU.gluLookAt(0.0f, 20.0f, -60.0f,
+  		      0.0f, 0.0f, 0.0f,
+  		      0.0f, 1.0f, 0.0f);
         }
-        /*
-        GLU.gluLookAt(camera1X,camera1Y,camera1Z,   // viewer location        
-        		cCamera1XView, cCamera1YView, cCamera1ZView,    // view point loc.
-    		      0.0f, 1.0f, 0.0f);   // view-up vector
-    	*/
-        //TODO: If it is appropriate for your scene, modify the camera's position and orientation here
-        //        using a call to GL11.gluLookAt(...)
     }
     
     protected void cleanupScene()
@@ -638,7 +626,9 @@ public class CS2150Coursework extends GraphicsLab
     
     private void resetAnimations()
     {
-        // reset all attributes that are modified by user controls or animations
+    	/**
+    	 * Resets the Viewpoints back to their original views.
+    	 */
         cCamera1XView = camera1XView;
         cCamera1YView = camera1YView;
         cCamera1ZView = camera1ZView;
@@ -659,8 +649,6 @@ public class CS2150Coursework extends GraphicsLab
         Vertex v2 = new Vertex( 0.5f, 0.0f,-0.5f); // right, back
         Vertex v3 = new Vertex( 0.5f, 0.0f, 0.5f); // right, front
         Vertex v4 = new Vertex(-0.5f, 0.0f, 0.5f); // left,  front
-        
-        // draw the plane geometry. order the vertices so that the plane faces up
         GL11.glBegin(GL11.GL_POLYGON);
         {
             new Normal(v4.toVector(),v3.toVector(),v2.toVector(),v1.toVector()).submit();
@@ -796,66 +784,6 @@ public class CS2150Coursework extends GraphicsLab
 					
 			GL11.glEnd();
 		}
-    }
-    
-    private void drawUnitAlleyWay()
-    {
-    	//Scene object Groups
-    	Vertex v1 = new Vertex(-0.5f,0.0f,1.0f);
-		Vertex v2 = new Vertex(-0.5f,0.5f,1.0f);
-		Vertex v3 = new Vertex(0.5f,0.5f,1.0f);
-		Vertex v4 = new Vertex(0.5f,0.0f,1.0f);
-		Vertex v5 = new Vertex(-0.5f,0.0f,-1.0f);
-		Vertex v6 = new Vertex(-0.5f,0.5f,-1.0f);
-		Vertex v7 = new Vertex(0.5f,0.5f,-1.0f);
-		Vertex v8 = new Vertex(0.5f,0.0f,-1.0f);
-			
-		GL11.glBegin(GL11.GL_POLYGON);
-        {
-            new Normal(v1.toVector(),v2.toVector(),v3.toVector(),v4.toVector()).submit();
-        	
-            v1.submit();
-            v2.submit();
-            v3.submit();
-            v4.submit();
-            
-        }
-        GL11.glEnd();
-        
-        GL11.glBegin(GL11.GL_POLYGON);
-        {
-            new Normal(v1.toVector(),v5.toVector(),v6.toVector(),v2.toVector()).submit();
-        	
-        	v1.submit();
-            v5.submit();
-            v6.submit();
-            v2.submit();
-            
-        }
-        GL11.glEnd();
-        
-        GL11.glBegin(GL11.GL_POLYGON);
-        {
-            new Normal(v4.toVector(),v3.toVector(),v7.toVector(),v8.toVector()).submit();
-
-            v4.submit();
-            v3.submit();
-            v7.submit();
-            v8.submit();
-        }
-        GL11.glEnd();
-        
-        GL11.glBegin(GL11.GL_POLYGON);
-        {
-            new Normal(v4.toVector(),v8.toVector(),v5.toVector(),v1.toVector()).submit();
-
-            v4.submit();
-            v8.submit();
-            v5.submit();
-            v1.submit();
-        }
-        GL11.glEnd();
-        
     }
 
     private void drawUnitCamera()
